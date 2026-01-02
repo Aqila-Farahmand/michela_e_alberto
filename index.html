@@ -120,27 +120,22 @@
                 Vi chiediamo gentilmente di darci conferma della vostra presenza ed eventuali allergie e/o intolleranze alimentari entro <strong>lunedì 7 Settembre 2026</strong>.
             </p>
             <form class="rsvp-form" id="rsvpForm" action="" method="POST">
+                <h3 style="margin-bottom: 20px; color: #333; font-size: 1.2rem;">Partecipanti</h3>
+                
                 <div class="form-group">
-                    <label for="name">Nome e cognome *</label> 
-                    <input type="text" id="name" name="name" required>
-                </div>
-
-                <p style="margin: 20px 0 10px 0; color: #666; font-size: 0.9rem; font-style: italic;">Campi facoltativi</p>
-
-                <div class="form-group">
-                    <label for="email">Indirizzo email</label>
-                    <input type="email" id="email" name="email">
+                    <label for="person1">Nome e cognome (Persona 1) *</label> 
+                    <input type="text" id="person1" name="person1" required placeholder="Es. Mario Rossi">
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">Numero di telefono</label>
-                    <input type="tel" id="phone" name="phone">
+                    <label for="person2">Nome e cognome (Persona 2)</label> 
+                    <input type="text" id="person2" name="person2" placeholder="Es. Maria Bianchi (opzionale)">
+                    <small style="display: block; margin-top: 5px; color: #666; font-size: 0.85rem;">Lascia vuoto se vieni da solo/a</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="children">Numero di Figlio</label>
+                    <label for="children">Numero di Figli</label>
                     <select id="children" name="children">
-                        <option value="">Seleziona numero di figli</option>
                         <option value="0">0 Figli</option>
                         <option value="1">1 Figlio</option>
                         <option value="2">2 Figli</option>
@@ -158,12 +153,6 @@
                     <label for="message">Messaggio per gli sposi</label>
                     <textarea id="message" name="message" placeholder="Condividi i tuoi pensieri o auguri..."></textarea>
                 </div>
-
-                <div class="form-group">
-                    <label for="regali">Importo del regalo</label>
-                    <input type="number" id="regali" name="regali" min="0" step="1" placeholder="0">
-                </div>
-
                 <button type="submit" class="btn">Invia RSVP</button>
                 <div class="success-message" id="successMessage">
                     Grazie per la tua risposta! Abbiamo ricevuto la tua conferma e non vediamo l'ora di celebrare con te.
@@ -302,15 +291,14 @@
             // Add timestamp
             formDataObj.append('timestamp', new Date().toLocaleString('it-IT'));
             
-            // Add custom subject
-            const name = formDataObj.get('name');
-            formDataObj.append('_subject', `RSVP Matrimonio - ${name}`);
-            
-            // Set reply-to email if provided
-            const email = formDataObj.get('email');
-            if (email) {
-                formDataObj.append('_replyto', email);
+            // Add custom subject with participant names
+            const person1 = formDataObj.get('person1');
+            const person2 = formDataObj.get('person2');
+            let subjectName = person1;
+            if (person2 && person2.trim() !== '') {
+                subjectName = `${person1} e ${person2}`;
             }
+            formDataObj.append('_subject', `RSVP Matrimonio - ${subjectName}`);
 
             try {
                 // Submit form to Formspree using native form submission
