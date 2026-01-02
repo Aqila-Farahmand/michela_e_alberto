@@ -2,13 +2,11 @@
 # This file helps Netlify understand how to build and deploy your site
 
 [build]
-  # Option 1: No build command (use config.js file directly)
-  # Make sure to manually create config.js on Netlify or upload it
+  # Build command: Generates config.js from Netlify environment variables
+  # Make sure to set FORMPREE_FORM_ID in Netlify dashboard:
+  # Site settings → Environment variables → Add variable
+  command = "node build-config.js"
   publish = "."
-  
-  # Option 2: Use build script with environment variables (more secure)
-  # Uncomment the line below and set FORMPREE_FORM_ID in Netlify environment variables
-  # command = "node build-config.js"
 
 # Headers for security and performance
 [[headers]]

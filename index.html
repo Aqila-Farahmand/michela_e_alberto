@@ -119,7 +119,7 @@
             <p style="text-align: center; max-width: 800px; margin: 0 auto 40px auto; font-size: 1.1rem; color: #555; line-height: 1.8;">
                 Vi chiediamo gentilmente di darci conferma della vostra presenza ed eventuali allergie e/o intolleranze alimentari entro <strong>lunedì 7 Settembre 2026</strong>.
             </p>
-            <form class="rsvp-form" id="rsvpForm" method="POST">
+            <form class="rsvp-form" id="rsvpForm" action="" method="POST">
                 <div class="form-group">
                     <label for="name">Nome e cognome *</label> 
                     <input type="text" id="name" name="name" required>
@@ -164,16 +164,7 @@
                     Grazie per la tua risposta! Abbiamo ricevuto la tua conferma e non vediamo l'ora di celebrare con te.
                 </div>
             </form>
-            <script>
-                // Set form action from config.js immediately when form is in DOM
-                (function() {
-                    const form = document.getElementById('rsvpForm');
-                    const formId = globalThis.WEDDING_CONFIG?.formspreeFormId;
-                    if (form && formId) {
-                        form.action = `https://formspree.io/f/${formId}`;
-                    }
-                })();
-            </script>
+            
         </div>
     </section>
 
@@ -254,12 +245,33 @@
     </script>
 
     <script>
+        // Set form action from config (keeps form ID out of HTML source)
+        function setFormAction() {
+            const rsvpForm = document.getElementById('rsvpForm');
+            if (rsvpForm && globalThis.WEDDING_CONFIG?.formspreeFormId) {
+                rsvpForm.action = `https://formspree.io/f/${globalThis.WEDDING_CONFIG.formspreeFormId}`;
+            }
+        }
+        
+        // Set form action immediately (script is at end of body, so DOM is ready)
+        setFormAction();
+        // Also set on DOMContentLoaded as fallback
+        document.addEventListener('DOMContentLoaded', setFormAction);
+
         // RSVP Form Handling
         const rsvpForm = document.getElementById('rsvpForm');
         const successMessage = document.getElementById('successMessage');
 
         rsvpForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            // Verify form action is set
+            if (!rsvpForm.action || rsvpForm.action === '') {
+                console.error('Form action not set. Config may not be loaded.');
+                successMessage.style.display = 'block';
+                successMessage.textContent = 'Errore di configurazione. Si prega di ricaricare la pagina.';
+                return;
+            }
             
             // Create FormData object for native form submission
             const formDataObj = new FormData(rsvpForm);
