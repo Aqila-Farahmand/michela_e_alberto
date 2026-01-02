@@ -253,9 +253,24 @@
         // Set form action from config (keeps form ID out of HTML source)
         function setFormAction() {
             const rsvpForm = document.getElementById('rsvpForm');
-            if (rsvpForm && globalThis.WEDDING_CONFIG?.formspreeFormId) {
-                rsvpForm.action = `https://formspree.io/f/${globalThis.WEDDING_CONFIG.formspreeFormId}`;
+            if (!rsvpForm) {
+                console.error('RSVP form element not found');
+                return;
             }
+            
+            if (!globalThis.WEDDING_CONFIG) {
+                console.error('WEDDING_CONFIG not loaded. Make sure config.js is loaded before this script.');
+                return;
+            }
+            
+            if (!globalThis.WEDDING_CONFIG.formspreeFormId) {
+                console.error('formspreeFormId not found in WEDDING_CONFIG');
+                return;
+            }
+            
+            const formId = globalThis.WEDDING_CONFIG.formspreeFormId;
+            rsvpForm.action = `https://formspree.io/f/${formId}`;
+            console.log('Form action set to:', rsvpForm.action);
         }
         
         // Set form action immediately (script is at end of body, so DOM is ready)
@@ -273,10 +288,13 @@
             // Verify form action is set
             if (!rsvpForm.action || rsvpForm.action === '') {
                 console.error('Form action not set. Config may not be loaded.');
+                console.error('WEDDING_CONFIG:', globalThis.WEDDING_CONFIG);
                 successMessage.style.display = 'block';
                 successMessage.textContent = 'Errore di configurazione. Si prega di ricaricare la pagina.';
                 return;
             }
+            
+            console.log('Submitting form to:', rsvpForm.action);
             
             // Create FormData object for native form submission
             const formDataObj = new FormData(rsvpForm);
@@ -312,7 +330,14 @@
                 } else {
                     const errorData = await response.json().catch(() => ({}));
                     console.error('Formspree error:', response.status, errorData);
-                    successMessage.textContent = 'Grazie per la vostra risposta! Si è verificato un errore. Ti preghiamo di riprovare.';
+                    let errorMsg = 'Grazie per la vostra risposta! Si è verificato un errore. Ti preghiamo di riprovare.';
+                    if (errorData.error) {
+                        console.error('Formspree error details:', errorData.error);
+                        if (errorData.error.includes('form not found') || response.status === 404) {
+                            errorMsg = 'Errore: Form ID non valido. Verifica la configurazione del form.';
+                        }
+                    }
+                    successMessage.textContent = errorMsg;
                 }
 
                 // Scroll to success message
