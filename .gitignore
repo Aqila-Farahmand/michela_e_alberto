@@ -29,8 +29,10 @@ config.js
 *.temp
 
 # documentation
-CONFIG_SETUP.md
-NETLIFY_DEPLOYMENT.md
-EMAIL_SETUP_INSTRUCTIONS.md
+doc/
+
+# node modules
+node_modules/
+
 
 
