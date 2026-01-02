@@ -1,0 +1,36 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor directories and files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Coverage directory (if you have tests)
+coverage/
+
+# Environment variables (if any)
+.env
+.env.local
+
+# Configuration file with secrets (DO NOT COMMIT)
+config.js
+
+# Temporary files
+*.tmp
+*.temp
+
+# documentation
+CONFIG_SETUP.md
+NETLIFY_DEPLOYMENT.md
+EMAIL_SETUP_INSTRUCTIONS.md
+
+

@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&family=Merriweather:wght@300;400;700&family=Nunito:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <!-- Configuration file (gitignored - contains secrets) -->
+    <script src="config.js"></script>
 </head>
 <body>
     <!-- Navigation -->
@@ -277,7 +279,7 @@
         // To set up: Go to https://formspree.io/, create a form, and replace FORM_ID below
         async function sendEmailToSposi(formData) {
             try {
-                const emailBody = `Nuovo RSVP Matrimonio Michela & Alberto
+                const emailBody = `RSVP Matrimonio Michela & Alberto
 
 Nome e cognome: ${formData.name}
 Email: ${formData.email || 'Non fornita'}
@@ -287,14 +289,21 @@ Allergie/intolleranze alimentari: ${formData.dietary || 'Nessuna'}
 Messaggio: ${formData.message || 'Nessun messaggio'}
 Data/Ora: ${formData.timestamp}`;
 
-                // Replace YOUR_FORM_ID with your Formspree form ID
-                // Get it from https://formspree.io/ after creating a form
-                const formId = 'YOUR_FORM_ID'; // Replace with your Formspree form ID
+                // Get form ID from config.js (gitignored file for security)
+                // Make sure config.js exists with your Formspree form ID
+                const formId = globalThis.WEDDING_CONFIG?.formspreeFormId;
+                
+                if (!formId) {
+                    console.error('Formspree form ID not configured. Please create config.js from config.example.js');
+                    return false;
+                }
+                
                 
                 const response = await fetch(`https://formspree.io/f/${formId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Accept': 'application/json',
                     },
                     body: JSON.stringify({
                         _subject: `RSVP Matrimonio - ${formData.name}`,

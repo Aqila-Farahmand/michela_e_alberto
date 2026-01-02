@@ -13,7 +13,7 @@
 
    - After logging in, click "New Form"
    - Give it a name like "Wedding RSVP - Michela & Alberto"
-   - Copy the form ID (it looks like: `xrgkqyzw` or `mknvqjkl`)
+   - Copy the form ID
 
 3. **Configure the Form:**
 
@@ -26,7 +26,6 @@
    - Open `index.html`
    - Find line 292: `const formId = 'YOUR_FORM_ID';`
    - Replace `'YOUR_FORM_ID'` with your actual Formspree form ID
-   - Example: `const formId = 'xrgkqyzw';`
 
 5. **Test the Form:**
    - Submit a test RSVP

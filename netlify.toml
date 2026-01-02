@@ -1,0 +1,44 @@
+# Netlify Configuration File
+# This file helps Netlify understand how to build and deploy your site
+
+[build]
+  # Option 1: No build command (use config.js file directly)
+  # Make sure to manually create config.js on Netlify or upload it
+  publish = "."
+  
+  # Option 2: Use build script with environment variables (more secure)
+  # Uncomment the line below and set FORMPREE_FORM_ID in Netlify environment variables
+  # command = "node build-config.js"
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Cache static assets
+[[headers]]
+  for = "/icon/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Redirect rules (if needed)
+# Uncomment and modify if you want to redirect old URLs
+# [[redirects]]
+#   from = "/old-page"
+#   to = "/"
+#   status = 301
+
