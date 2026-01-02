@@ -78,12 +78,9 @@
                         </p>
                         <p>Dopo la cerimonia, unitevi a noi per un pomeriggio e una serata di festa, cibo delizioso, musica e balli. Non vediamo l'ora di celebrare con voi!</p>
                         <div class="giorno-timeline">
-                            <h5>La giornata in dettaglio:</h5>
-                            <p><strong>13:30 - 14:00</strong>: Arrivo degli invitati e inizio del ricevimento</p>
-                            <p><strong>14:00 - 16:00</strong>: Aperitivo e cocktail di benvenuto</p>
-                            <p><strong>16:00 in poi</strong>: Pranzo e discorsi</p>
-                            <p><strong>20:00</strong>: Il taglio della torta nuziale</p>
-                            <p><strong>Fino a tardi</strong>: Balli e musica!</p>
+                            <p>Inizio ricevimento alle 13:30 con un aperitivo di benvenuto.
+                            Per pranzo un delizioso banchetto e a seguire balli e festeggiamenti fino a tarda serata.</p>
+                            
                         </div>
                     </div>
                 </div>
@@ -119,23 +116,23 @@
             <p style="text-align: center; max-width: 800px; margin: 0 auto 40px auto; font-size: 1.1rem; color: #555; line-height: 1.8;">
                 Vi chiediamo gentilmente di darci conferma della vostra presenza ed eventuali allergie e/o intolleranze alimentari entro <strong>lunedì 7 Settembre 2026</strong>.
             </p>
-            <form class="rsvp-form" id="rsvpForm" action="" method="POST">
+            <form class="rsvp-form" id="formConferma" name="formConferma" action="" method="POST">
                 <h3 style="margin-bottom: 20px; color: #333; font-size: 1.2rem;">Partecipanti</h3>
                 
                 <div class="form-group">
-                    <label for="person1">Nome e cognome (Persona 1) *</label> 
-                    <input type="text" id="person1" name="person1" required placeholder="Es. Mario Rossi">
+                    <label for="persona1">Nome e cognome (Persona 1) *</label> 
+                    <input type="text" id="persona1" name="persona1" required placeholder="Es. Mario Rossi">
                 </div>
 
                 <div class="form-group">
-                    <label for="person2">Nome e cognome (Persona 2)</label> 
-                    <input type="text" id="person2" name="person2" placeholder="Es. Maria Bianchi (opzionale)">
+                    <label for="persona2">Nome e cognome (Persona 2)</label> 
+                    <input type="text" id="persona2" name="persona2" placeholder="Es. Maria Bianchi (opzionale)">
                     <small style="display: block; margin-top: 5px; color: #666; font-size: 0.85rem;">Lascia vuoto se vieni da solo/a</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="children">Numero di Figli</label>
-                    <select id="children" name="children">
+                    <label for="figli">Numero di Figli</label>
+                    <select id="figli" name="figli">
                         <option value="0">0 Figli</option>
                         <option value="1">1 Figlio</option>
                         <option value="2">2 Figli</option>
@@ -145,13 +142,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="dietary">Allergie/intolleranze alimentari</label>
-                    <textarea id="dietary" name="dietary" placeholder="Indica eventuali allergie o intolleranze alimentari..."></textarea>
+                    <label for="allergie">Allergie/intolleranze alimentari</label>
+                    <textarea id="allergie" name="allergie" placeholder="Indica eventuali allergie o intolleranze alimentari..."></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="message">Messaggio per gli sposi</label>
-                    <textarea id="message" name="message" placeholder="Condividi i tuoi pensieri o auguri..."></textarea>
+                    <label for="messaggio">Messaggio per gli sposi</label>
+                    <textarea id="messaggio" name="messaggio" placeholder="Condividi i tuoi pensieri o auguri..."></textarea>
                 </div>
                 <button type="submit" class="btn">Invia RSVP</button>
                 <div class="success-message" id="successMessage">
@@ -168,7 +165,7 @@
             <h3 class="section-title">Viaggio di Nozze</h3>
             <div class="gift-card">
                 <h3>Il Nostro Viaggio dei Sogni</h3>
-                <p>La vostra presenza e il vostro affetto per noi sarà il dono più grande. Per chi desiderasse farci un regalo, ci farebbe piacere un contributo per realizzare il nostro viaggio dei sogni:</p>
+                <p>La vostra presenza e il vostro affetto per noi saranno il dono più grande. Per chi desiderasse farci un regalo, ci farebbe piacere un contributo per realizzare il nostro viaggio dei sogni:</p>
                 <div class="iban-box">
                     <div class="iban-code" id="ibanCode">IT06G0338501601100080175578</div>
                     <button class="copy-btn" onclick="copyIBAN()">Copia IBAN</button>
@@ -241,7 +238,7 @@
     <script>
         // Set form action from config (keeps form ID out of HTML source)
         function setFormAction() {
-            const rsvpForm = document.getElementById('rsvpForm');
+            const rsvpForm = document.getElementById('formConferma');
             if (!rsvpForm) {
                 console.error('RSVP form element not found');
                 return;
@@ -292,8 +289,8 @@
             formDataObj.append('timestamp', new Date().toLocaleString('it-IT'));
             
             // Add custom subject with participant names
-            const person1 = formDataObj.get('person1');
-            const person2 = formDataObj.get('person2');
+            const person1 = formDataObj.get('persona1');
+            const person2 = formDataObj.get('persona2');
             let subjectName = person1;
             if (person2 && person2.trim() !== '') {
                 subjectName = `${person1} e ${person2}`;
