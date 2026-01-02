@@ -121,7 +121,7 @@
             </p>
             <form class="rsvp-form" id="rsvpForm">
                 <div class="form-group">
-                    <label for="name">Nome e cognome *</label>
+                    <label for="name">Nome e cognome *</label> 
                     <input type="text" id="name" name="name" required>
                 </div>
 
@@ -260,21 +260,7 @@
             return [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
         }
 
-        // Function to download CSV file
-        function downloadCSV(csvContent, filename) {
-            const BOM = '\uFEFF'; // UTF-8 BOM for Excel compatibility
-            const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            
-            link.setAttribute('href', url);
-            link.setAttribute('download', filename);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-        }
-
+        
         // Function to send email via Formspree
         // To set up: Go to https://formspree.io/, create a form, and replace FORM_ID below
         async function sendEmailToSposi(formData) {
@@ -319,7 +305,13 @@ Data/Ora: ${formData.timestamp}`;
                     })
                 });
 
-                return response.ok;
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('Formspree error:', response.status, errorData);
+                    return false;
+                }
+
+                return true;
             } catch (error) {
                 console.error('Email sending error:', error);
                 return false;
@@ -344,26 +336,15 @@ Data/Ora: ${formData.timestamp}`;
                 timestamp: new Date().toLocaleString('it-IT')
             };
 
-            // Save to localStorage
-            let rsvps = JSON.parse(localStorage.getItem('weddingRSVPs') || '[]');
-            rsvps.push({...formData, timestamp: new Date().toISOString()});
-            localStorage.setItem('weddingRSVPs', JSON.stringify(rsvps));
-
-            // Generate and download CSV with all RSVPs
-            const allRSVPs = JSON.parse(localStorage.getItem('weddingRSVPs') || '[]');
-            const csvContent = convertToCSV(allRSVPs);
-            const filename = `RSVP_Matrimonio_Michela_Alberto_${new Date().toISOString().split('T')[0]}.csv`;
-            downloadCSV(csvContent, filename);
-
-            // Send email to sposi (configure Formspree form ID above)
+            // Send email to sposi via Formspree
             const emailSent = await sendEmailToSposi(formData);
 
             // Show success message
             successMessage.style.display = 'block';
             if (emailSent) {
-                successMessage.textContent = 'Grazie per la tua risposta! I dati sono stati inviati via email e il file CSV è stato scaricato.';
+                successMessage.textContent = 'Grazie per la tua risposta! Abbiamo ricevuto la tua conferma e non vediamo l\'ora di celebrare con voi.';
             } else {
-                successMessage.textContent = 'Grazie per la tua risposta! I dati sono stati salvati e il file CSV è stato scaricato. (Nota: configura Formspree per l\'invio email automatico)';
+                successMessage.textContent = 'Grazie per la vostra risposta!';
             }
             rsvpForm.reset();
 
