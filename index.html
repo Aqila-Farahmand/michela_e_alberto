@@ -16,7 +16,7 @@
     <nav id="navbar">
         <div class="nav-container">
             <div class="logo"><a href="#"><img src="icon/logo.png" alt="Logo"></a></div>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+            <button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">☰</button>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#grande-giorno">Il Grande Giorno</a></li>
                 <li><a href="#rsvp">RSVP</a></li>
@@ -265,10 +265,11 @@
         document.addEventListener('DOMContentLoaded', setFormAction);
 
         // RSVP Form Handling
-        const rsvpForm = document.getElementById('rsvpForm');
+        const rsvpForm = document.getElementById('formConferma');
         const successMessage = document.getElementById('successMessage');
 
-        rsvpForm.addEventListener('submit', async function(e) {
+        if (rsvpForm && successMessage) {
+            rsvpForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             // Verify form action is set
@@ -338,7 +339,8 @@
                 successMessage.textContent = 'Grazie per la vostra risposta! Si è verificato un errore. Ti preghiamo di riprovare.';
                 successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             }
-        });
+            });
+        }
 
         // Copy IBAN to Clipboard
         function copyIBAN() {
@@ -381,31 +383,74 @@
 
         // Navigation scroll effect
         const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // Mobile menu toggle
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-        const navMenu = document.getElementById('navMenu');
-        
-        if (mobileMenuToggle) {
-            mobileMenuToggle.addEventListener('click', function() {
-                navMenu.classList.toggle('active');
+        if (navbar) {
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
             });
         }
 
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', function(event) {
-            const isClickInsideNav = navbar.contains(event.target);
-            if (!isClickInsideNav && navMenu.classList.contains('active')) {
-                navMenu.classList.remove('active');
+        // Mobile menu toggle
+        function initMobileMenu() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const navMenu = document.getElementById('navMenu');
+            
+            if (!mobileMenuToggle) {
+                console.error('Mobile menu toggle button not found');
+                return;
             }
-        });
+            
+            if (!navMenu) {
+                console.error('Navigation menu not found');
+                return;
+            }
+            
+            // Add click event to toggle button
+            mobileMenuToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const isActive = navMenu.classList.contains('active');
+                console.log('Menu button clicked. Current state:', isActive);
+                
+                navMenu.classList.toggle('active');
+                
+                const newState = navMenu.classList.contains('active');
+                console.log('Menu state after toggle:', newState);
+                console.log('Menu element:', navMenu);
+                console.log('Menu computed display:', getComputedStyle(navMenu).display);
+            });
+
+            // Close mobile menu when clicking outside (but not on the toggle button or menu items)
+            document.addEventListener('click', function(event) {
+                if (!navMenu || !mobileMenuToggle) return;
+                
+                // Don't close if clicking the toggle button
+                if (event.target === mobileMenuToggle || mobileMenuToggle.contains(event.target)) {
+                    return;
+                }
+                
+                // Don't close if clicking inside the menu
+                if (navMenu.contains(event.target)) {
+                    return;
+                }
+                
+                // Close if clicking outside
+                if (navMenu.classList.contains('active')) {
+                    navMenu.classList.remove('active');
+                }
+            });
+        }
+        
+        // Initialize mobile menu when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initMobileMenu);
+        } else {
+            initMobileMenu();
+        }
     </script>
 </body>
 </html>
