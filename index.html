@@ -107,10 +107,6 @@
                         <span class="countdown-number" id="minutes">0</span>
                         <span class="countdown-label-small">Minuti</span>
                     </div>
-                    <div class="countdown-item">
-                        <span class="countdown-number" id="seconds">0</span>
-                        <span class="countdown-label-small">Secondi</span>
-                    </div>
                 </div>
             </div>
             <p style="text-align: center; max-width: 800px; margin: 0 auto 40px auto; font-size: 1.1rem; color: #555; line-height: 1.8;">
@@ -217,17 +213,14 @@
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
             const daysEl = document.getElementById('days');
             const hoursEl = document.getElementById('hours');
             const minutesEl = document.getElementById('minutes');
-            const secondsEl = document.getElementById('seconds');
 
             if (daysEl) daysEl.textContent = days;
             if (hoursEl) hoursEl.textContent = hours;
             if (minutesEl) minutesEl.textContent = minutes;
-            if (secondsEl) secondsEl.textContent = seconds;
         }
 
         // Update countdown every second
